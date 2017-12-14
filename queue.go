@@ -1,5 +1,7 @@
 package main
 
+import "sync"
+
 // The size of a block of data
 const blockSize = 4096
 
@@ -13,6 +15,7 @@ type Queue struct {
 	blocks [][]string
 	head   []string
 	tail   []string
+	sync.Mutex
 }
 
 // Creates a new, empty queue.
@@ -26,6 +29,9 @@ func New() *Queue {
 
 // Pushes a new element into the queue, expanding it if necessary.
 func (q *Queue) Push(data string) {
+	q.Lock()
+	defer q.Unlock()
+
 	q.tail[q.tailOff] = data
 	q.tailOff++
 	if q.tailOff == blockSize {
@@ -48,6 +54,9 @@ func (q *Queue) Push(data string) {
 
 // Pops out an element from the queue. Note, no bounds checking are done.
 func (q *Queue) Pop() (res string) {
+	q.Lock()
+	defer q.Unlock()
+
 	res, q.head[q.headOff] = q.head[q.headOff], "nil"
 	q.headOff++
 	if q.headOff == blockSize {

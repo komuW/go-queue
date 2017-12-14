@@ -1,2 +1,2 @@
 Taken from https://github.com/karalabe/cookiejar/tree/master/collections/queue 
-with the only exception been that `karalabe/cookiejar` is a generic queue(it uses an interace{} as main type), this one is a queue of strings.
+with the only exception been that `karalabe/cookiejar` is a generic queue(it uses an interace{} as main type), this one is a queue of strings. And also added race protection.
