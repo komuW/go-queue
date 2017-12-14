@@ -30,7 +30,6 @@ func New() *Queue {
 // Pushes a new element into the queue, expanding it if necessary.
 func (q *Queue) Push(data string) {
 	q.Lock()
-	defer q.Unlock()
 
 	q.tail[q.tailOff] = data
 	q.tailOff++
@@ -50,12 +49,13 @@ func (q *Queue) Push(data string) {
 		}
 		q.tail = q.blocks[q.tailIdx]
 	}
+
+	q.Unlock()
 }
 
 // Pops out an element from the queue. Note, no bounds checking are done.
 func (q *Queue) Pop() (res string) {
 	q.Lock()
-	defer q.Unlock()
 
 	res, q.head[q.headOff] = q.head[q.headOff], "nil"
 	q.headOff++
@@ -64,6 +64,8 @@ func (q *Queue) Pop() (res string) {
 		q.headIdx = (q.headIdx + 1) % len(q.blocks)
 		q.head = q.blocks[q.headIdx]
 	}
+
+	q.Unlock()
 	return
 }
 
