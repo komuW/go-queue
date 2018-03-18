@@ -1,0 +1,36 @@
+version: '2'
+services:
+  summitdb1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7481:7481"
+    volumes:
+      - ./data1:/data1
+
+  summitdb2:
+    build:
+      context: .
+      dockerfile: Peer2Dockerfile
+    ports:
+      - "7482:7482"
+    volumes:
+      - ./data2:/data2
+    depends_on:
+      - summitdb1
+    links:
+      - summitdb1:summitdb1
+
+  summitdb3:
+    build:
+      context: .
+      dockerfile: Peer3Dockerfile
+    ports:
+      - "7483:7483"
+    volumes:
+      - ./data3:/data3
+    depends_on:
+      - summitdb1
+    links:
+      - summitdb1:summitdb1
